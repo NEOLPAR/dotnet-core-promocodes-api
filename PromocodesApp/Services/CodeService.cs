@@ -20,13 +20,8 @@ namespace PromocodesApp.Services
     public class CodeService : IService<CodeDTO>
     {
         private readonly PromocodesAppContext _context;
-        private readonly IConfiguration _configuration;
 
-        public CodeService(PromocodesAppContext context, IConfiguration configuration)
-        {
-            _context = context;
-            _configuration = configuration;
-        }
+        public CodeService(PromocodesAppContext context) =>_context = context;
 
         public async Task<IList<CodeDTO>> Get()
         {
