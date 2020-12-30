@@ -1,8 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using PromocodesApp.Authentication;
 
 namespace PromocodesApp.Models
 {
-    public class PromocodesAppContext : DbContext
+    public class PromocodesAppContext : IdentityDbContext<ApplicationUser>
     {
         public PromocodesAppContext(DbContextOptions<PromocodesAppContext> options) : base(options) { }
         public DbSet<Code> Codes { get; set; }
