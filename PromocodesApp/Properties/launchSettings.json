@@ -15,7 +15,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "promocodes": {
+    "PromocodesApp": {
       "commandName": "Project",
       "dotnetRunMessages": "true",
       "launchBrowser": true,

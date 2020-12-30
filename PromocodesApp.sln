@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "promocodes", "promocodes\promocodes.csproj", "{4FE9CDC9-C36E-48EE-B671-1202808F61DC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PromocodesApp", "PromocodesApp\PromocodesApp.csproj", "{4FE9CDC9-C36E-48EE-B671-1202808F61DC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{B06BB0B3-56A3-4721-A35B-FF8E4935F5E4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests", "Tests\Tests.csproj", "{B06BB0B3-56A3-4721-A35B-FF8E4935F5E4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
