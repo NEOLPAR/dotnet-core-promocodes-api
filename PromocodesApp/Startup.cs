@@ -94,10 +94,11 @@ namespace PromocodesApp
             // configure DI for application services
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IService<CodeDTO>, CodeService>();
+            services.AddScoped<IService<ServiceDTO>, ServiceService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public async void Configure(IApplicationBuilder app, IWebHostEnvironment env, PromocodesAppContext context)
+        public async void Configure(IApplicationBuilder app, IWebHostEnvironment env, PromocodesAppContext context, UserManager<ApplicationUser> userManager)
         {
             if (env.IsDevelopment())
             {
@@ -109,7 +110,12 @@ namespace PromocodesApp
                     c.RoutePrefix = string.Empty;
                 });
 
-                context.Codes.Add(new Code { Name = "test" });
+                context.Codes.Add(new Code { Name = "Code 1" });
+                context.Services.Add(new Service { Name = "Service 1", Description = "Desc" });
+                var userService = new UserService(userManager, Configuration);
+                await userService.Register(new RegisterRequest { 
+                    Email = "test@test.com", Username = "test", Password = "Test1234*" });
+
                 await context.SaveChangesAsync();
             }
 
@@ -127,7 +133,7 @@ namespace PromocodesApp
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapControllers().RequireAuthorization();
             });
         }
     }
