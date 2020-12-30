@@ -1,24 +1,21 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using PromocodesApp.Authentication;
-using PromocodesApp.Services;
 using System.Threading.Tasks;
 
-namespace PromocodesApp.Controllers
+namespace PromocodesApp.Authentication
 {
     [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
     public class AuthenticateController : ControllerBase
     {
-        private UserService _userService;
+        private IUserService _userService;
 
-        public AuthenticateController(UserManager<ApplicationUser> userManager, IConfiguration configuration)
+        public AuthenticateController(IUserService userService)
         {
-            _userService = new UserService(userManager, configuration);
+            _userService = userService;
         }
 
         [AllowAnonymous]

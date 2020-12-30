@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using PromocodesApp.Authentication;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -10,9 +9,15 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PromocodesApp.Services
+namespace PromocodesApp.Authentication
 {
-    public class UserService
+    public interface IUserService
+    {
+        Task<LoginDTO> Login(LoginRequest model);
+        Task<string> Register(RegisterRequest model);
+    }
+
+    public class UserService : IUserService
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IConfiguration _configuration;
@@ -23,7 +28,7 @@ namespace PromocodesApp.Services
             _configuration = configuration;
         }
 
-        public async Task<LoginResponse> Login(LoginRequest model)
+        public async Task<LoginDTO> Login(LoginRequest model)
         {
             var user = await _userManager.FindByNameAsync(model.Username);
 
@@ -54,7 +59,7 @@ namespace PromocodesApp.Services
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
             );
 
-            return new LoginResponse(new JwtSecurityTokenHandler().WriteToken(token), token.ValidTo);
+            return new LoginDTO(new JwtSecurityTokenHandler().WriteToken(token), token.ValidTo);
         }
 
         public async Task<string> Register(RegisterRequest model)

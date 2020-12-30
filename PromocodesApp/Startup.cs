@@ -9,7 +9,10 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using PromocodesApp.Authentication;
+using PromocodesApp.Entities;
+using PromocodesApp.Interfaces;
 using PromocodesApp.Models;
+using PromocodesApp.Services;
 using System.Text;
 
 namespace PromocodesApp
@@ -87,10 +90,14 @@ namespace PromocodesApp
                     }
                 });
             });
+
+            // configure DI for application services
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IService<CodeDTO>, CodeService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public async void Configure(IApplicationBuilder app, IWebHostEnvironment env, PromocodesAppContext context)
         {
             if (env.IsDevelopment())
             {
@@ -101,6 +108,9 @@ namespace PromocodesApp
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "PromocodesApp v1");
                     c.RoutePrefix = string.Empty;
                 });
+
+                context.Codes.Add(new Code { Name = "test" });
+                await context.SaveChangesAsync();
             }
 
             // global cors policy
