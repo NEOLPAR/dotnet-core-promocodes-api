@@ -18,6 +18,17 @@ namespace PromocodesApp.Authentication
             _userService = userService;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetId([FromHeader] string authorization)
+        {
+            var response = await _userService.GetId(authorization);
+
+            if (response == null)
+                return BadRequest();
+
+            return Ok(response);
+        }
+
         [AllowAnonymous]
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest model)
@@ -25,8 +36,11 @@ namespace PromocodesApp.Authentication
             var response = await _userService.Login(model);
 
             if (response == null)
-                return BadRequest(new { Status = "Error", 
-                    Message = "Username or password is incorrect." });
+                return BadRequest(new
+                {
+                    Status = "Error",
+                    Message = "Username or password is incorrect."
+                });
 
             return Ok(response);
         }
