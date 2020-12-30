@@ -9,5 +9,13 @@ namespace PromocodesApp.Models
         public PromocodesAppContext(DbContextOptions<PromocodesAppContext> options) : base(options) { }
         public DbSet<Code> Codes { get; set; }
         public DbSet<Service> Services { get; set; }
+        public DbSet<CodeServiceUser> CodesServicesUsers { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<CodeServiceUser>()
+               .HasKey(x => new { x.CodeId, x.ServiceId, x.UserId });
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }
