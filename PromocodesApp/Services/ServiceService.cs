@@ -80,11 +80,11 @@ namespace PromocodesApp.Services
 
         public async Task<bool> Delete(int id)
         {
-            var itm = await _context.Codes.FindAsync(id);
+            var itm = await _context.Services.FindAsync(id);
 
             if (itm == null) return false;
 
-            _context.Codes.Remove(itm);
+            _context.Services.Remove(itm);
             await _context.SaveChangesAsync();
 
             return true;
