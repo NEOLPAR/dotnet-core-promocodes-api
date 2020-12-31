@@ -1,5 +1,6 @@
 ﻿using PromocodesApp.Entities;
 using PromocodesApp.Interfaces;
+using PromocodesApp.Services;
 
 namespace PromocodesApp.Controllers
 {

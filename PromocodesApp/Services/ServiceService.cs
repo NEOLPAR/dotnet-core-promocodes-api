@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace PromocodesApp.Services
 {
-    public class ServiceService : IService<ServiceDTO>
+    public class ServiceService : IServiceService<ServiceDTO>
     {
         private readonly PromocodesAppContext _context;
 
@@ -88,6 +88,24 @@ namespace PromocodesApp.Services
             await _context.SaveChangesAsync();
 
             return true;
+        }
+
+        public async Task<ServiceDTO> GetByName(string name)
+        {
+            var itm = await _context.Services.Where(x => x.Name == name).FirstOrDefaultAsync();
+
+            if (itm == null) return null;
+
+            return new ServiceDTO(itm);
+        }
+
+        public async Task<IList<ServiceDTO>> GetInfiniteScroll(int page, int elements)
+        {
+            var startPosition = (page - 1) * elements;
+            return await _context.Services
+                .Select(x => new ServiceDTO(x.Id, x.Name, x.Description))
+                .Skip(startPosition).Take(elements)
+                .ToListAsync();
         }
     }
 }

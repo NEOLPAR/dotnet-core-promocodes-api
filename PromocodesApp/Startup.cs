@@ -94,7 +94,7 @@ namespace PromocodesApp
             // configure DI for application services
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IService<CodeDTO>, CodeService>();
-            services.AddScoped<IService<ServiceDTO>, ServiceService>();
+            services.AddScoped<IServiceService<ServiceDTO>, ServiceService>();
             services.AddScoped<ICodeServiceUserService, CodeServiceUserService>();
         }
 
@@ -134,7 +134,7 @@ namespace PromocodesApp
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers().RequireAuthorization();
+                endpoints.MapControllers();//.RequireAuthorization();
             });
         }
     }
