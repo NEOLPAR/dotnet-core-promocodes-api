@@ -10,19 +10,16 @@ namespace PromocodesApp.Models
 {
     public class CodeServiceUser
     {
+        [ForeignKey(nameof(Code))]
         public int CodeId { get; set; }
-
-        [ForeignKey("CodeId")]
         public Code Code { get; set; }
 
+        [ForeignKey(nameof(Service))]
         public int ServiceId { get; set; }
-
-        [ForeignKey("ServiceId")]
         public Service Service { get; set; }
-        
-        public string UserId { get; set; }
 
-        [ForeignKey("UserId")]
+        [ForeignKey(nameof(ApplicationUser))]
+        public string UserId { get; set; }
         public ApplicationUser User { get; set; }
         
         public bool Enabled { get; set; }

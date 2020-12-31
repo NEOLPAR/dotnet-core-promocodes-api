@@ -15,6 +15,7 @@ namespace PromocodesApp.Models
         {
             modelBuilder.Entity<CodeServiceUser>()
                .HasKey(x => new { x.CodeId, x.ServiceId, x.UserId });
+
             base.OnModelCreating(modelBuilder);
         }
     }
