@@ -11,9 +11,10 @@ namespace PromocodesApp.Interfaces
 {
     public interface ICodeServiceUserService
     {
-        Task<IList<CodeServiceUser>> Get(string authorizationHeader);
-        Task<CodeServiceUser> Get(int codeId, int serviceId, string authorizationHeader);
-        Task<CodeServiceUser> Post(CodeServiceUser itm, string authorizationHeader);
-        Task<bool> Delete(int codeId, int serviceId, string authorizationHeader);
+        string CurrentUserName();
+        Task<IList<CodeServiceUser>> Get();
+        Task<CodeServiceUser> Get(int codeId, int serviceId);
+        Task<CodeServiceUser> Post(CodeServiceUser itm);
+        Task<bool> Delete(int codeId, int serviceId);
     }
 }

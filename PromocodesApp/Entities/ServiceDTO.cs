@@ -13,6 +13,8 @@ namespace PromocodesApp.Entities
         public string Name { get; set; }
         public string Description { get; set; }
 
+        public IList<CodeServiceUserDTO> Codes { get; set; }
+
         [JsonConstructor]
         public ServiceDTO(int id, string name, string description)
         {
@@ -20,11 +22,23 @@ namespace PromocodesApp.Entities
             Name = name;
             Description = description;
         }
-        public ServiceDTO(Service itm)
+        public ServiceDTO(Service itm, string username)
         {
             Id = itm.ServiceId;
             Name = itm.Name;
             Description = itm.Description;
+
+            if (itm.CodesServicesUsers != null && itm.CodesServicesUsers.Count > 0)
+            {
+                Codes = itm.CodesServicesUsers
+                    .Where(x => x.ServiceId == itm.ServiceId && x.UserName == username)
+                    .Select(x => new CodeServiceUserDTO(x))
+                    .ToList();
+            }
+            else
+            {
+                Codes = new List<CodeServiceUserDTO>();
+            }
         }
     }
 }

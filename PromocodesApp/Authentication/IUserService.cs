@@ -8,9 +8,10 @@ namespace PromocodesApp.Authentication
 {
     public interface IUserService
     {
+        string CurrentUserName();
         Task<LoginDTO> Login(LoginRequest model);
         Task<string> Register(RegisterRequest model);
-        Task<string> GetId(string authorization);
+        Task<string> GetId();
         Task<ApplicationUser> Get(string username);
     }
 }

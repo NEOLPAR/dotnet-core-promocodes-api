@@ -10,5 +10,7 @@ namespace PromocodesApp.Interfaces
     {
         Task<T> GetByName(string name);
         Task<IList<T>> GetInfiniteScroll(int page, int elements);
+        Task<IList<T>> FilterByName(string name);
+        Task<IList<T>> FilterByNameInfiniteScroll(string name, int page, int elements);
     }
 }

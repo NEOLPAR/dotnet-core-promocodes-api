@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -20,18 +21,28 @@ namespace PromocodesApp.Services
     public class ServiceService : IServiceService<Service>
     {
         private readonly PromocodesAppContext _context;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public ServiceService(PromocodesAppContext context) => _context = context;
-
+        public ServiceService(PromocodesAppContext context, IHttpContextAccessor httpContextAccessor)
+        {
+            _context = context;
+            _httpContextAccessor = httpContextAccessor;
+        }
+        public string CurrentUserName() => _httpContextAccessor.HttpContext.User.Identity.Name;
         public async Task<IList<Service>> Get()
         {
             return await _context.Services
+                .Include(r => r.CodesServicesUsers)
+                .ThenInclude(r => r.Code)
                 .ToListAsync();
         }
 
         public async Task<Service> Get(int id)
         {
-            return await _context.Services.FindAsync(id);
+            return await _context.Services
+                .Include(r => r.CodesServicesUsers)
+                .ThenInclude(r => r.Code)
+                .FirstOrDefaultAsync(x => x.ServiceId == id);
         }
 
         public async Task<Service> Put(int id, Service itm)
@@ -81,18 +92,39 @@ namespace PromocodesApp.Services
 
         public async Task<Service> GetByName(string name)
         {
-            var itm = await _context.Services.Where(x => x.Name == name).FirstOrDefaultAsync();
+            var itm = await _context.Services.Where(x => x.Name == name)
+                .Include(r => r.CodesServicesUsers)
+                .ThenInclude(r => r.Code)
+                .FirstOrDefaultAsync();
 
             if (itm == null) return null;
 
             return itm;
         }
 
+        public async Task<IList<Service>> FilterByName(string name) =>
+            await _context.Services
+                .Where(x => x.Name.ToLower().Contains(name.ToLower()))
+                .Include(r => r.CodesServicesUsers)
+                .ThenInclude(r => r.Code)
+                .ToListAsync();
+
+        public async Task<IList<Service>> FilterByNameInfiniteScroll
+            (string name, int page, int elements) =>
+            await _context.Services
+                .Where(x => x.Name.ToLower().Contains(name.ToLower()))
+                .Skip((page - 1) * elements).Take(elements)
+                .Include(r => r.CodesServicesUsers)
+                .ThenInclude(r => r.Code)
+                .ToListAsync();
+
         public async Task<IList<Service>> GetInfiniteScroll(int page, int elements)
         {
             var startPosition = (page - 1) * elements;
             return await _context.Services
                 .Skip(startPosition).Take(elements)
+                .Include(r => r.CodesServicesUsers)
+                .ThenInclude(r => r.Code)
                 .ToListAsync();
         }
     }

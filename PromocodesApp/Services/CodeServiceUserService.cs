@@ -1,10 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using PromocodesApp.Authentication;
-using PromocodesApp.Entities;
-using PromocodesApp.Helpers;
 using PromocodesApp.Interfaces;
 using PromocodesApp.Models;
 using System.Collections.Generic;
@@ -15,53 +14,53 @@ namespace PromocodesApp.Services
 {
     public class CodeServiceUserService : ICodeServiceUserService
     {
-        private readonly UserManager<ApplicationUser> _userManager;
         private readonly PromocodesAppContext _context;
-        private readonly IConfiguration _configuration;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public CodeServiceUserService(PromocodesAppContext context,
-            UserManager<ApplicationUser> userManager,
-            IConfiguration configuration)
+            IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
-            _userManager = userManager;
-            _configuration = configuration;        
+            _httpContextAccessor = httpContextAccessor;
         }
-
-        public async Task<IList<CodeServiceUser>> Get(string authorizationHeader)
+        public string CurrentUserName() => _httpContextAccessor.HttpContext.User.Identity.Name;
+        public async Task<IList<CodeServiceUser>> Get()
         {
-            var userItm = await GetUser(authorizationHeader);
+            var username = CurrentUserName();
 
-            if (userItm == null) return null;
+            if (username == null) return null;
 
             var services = await _context.CodesServicesUsers
                 .Include(r => r.Service)
                 .Include(r => r.Code)
-                .Where(x => x.User.Id == userItm.Id)
+                .Where(x => x.UserName == username)
                 .ToListAsync();
 
             return services;
         }
 
-        public async Task<CodeServiceUser> Get
-            (int codeId, int serviceId, string authorizationHeader)
+        public async Task<CodeServiceUser> Get(int codeId, int serviceId)
         {
-            var userItm = await GetUser(authorizationHeader);
+            var username = CurrentUserName();
 
-            if (userItm == null) return null;
+            if (username == null) return null;
 
             return await _context.CodesServicesUsers
-                .FindAsync(codeId, serviceId, userItm.Id);
+                .Include(r => r.Service)
+                .Include(r => r.Code)
+                .FirstOrDefaultAsync(x => x.CodeId == codeId &&
+                    x.ServiceId == serviceId &&
+                    x.UserName == username);
         }
-        public async Task<CodeServiceUser> Post(CodeServiceUser itm, string authorizationHeader)
+        public async Task<CodeServiceUser> Post(CodeServiceUser itm)
         {
             var codeItm = await _context.Codes.FindAsync(itm.CodeId);
             var serviceItm = await _context.Services.FindAsync(itm.ServiceId);
-            var userItm = await GetUser(authorizationHeader);
+            var username = CurrentUserName();
 
             if (codeItm == null || codeItm.CodeId != itm.CodeId ||
                 serviceItm == null || serviceItm.ServiceId != itm.ServiceId ||
-                userItm == null) 
+                username == null) 
                 return null;
 
             var newItm = new CodeServiceUser
@@ -70,7 +69,7 @@ namespace PromocodesApp.Services
                 Code = codeItm,
                 ServiceId = itm.ServiceId,
                 Service = serviceItm,
-                UserId = userItm.Id,
+                UserName = username,
                 Enabled = itm.Enabled
             };
 
@@ -80,13 +79,13 @@ namespace PromocodesApp.Services
             return newItm;
         }
 
-        public async Task<bool> Delete(int codeId, int serviceId, string authorizationHeader)
+        public async Task<bool> Delete(int codeId, int serviceId)
         {
-            var userItm = await GetUser(authorizationHeader);
+            var username = CurrentUserName();
 
-            if (userItm == null) return false;
+            if (username == null) return false;
 
-            var itm = await _context.CodesServicesUsers.FindAsync(codeId, serviceId, userItm.Id);
+            var itm = await _context.CodesServicesUsers.FindAsync(codeId, serviceId, username);
 
             if (itm == null) return false;
 
@@ -94,16 +93,6 @@ namespace PromocodesApp.Services
             await _context.SaveChangesAsync();
 
             return true;
-        }
-
-        private async Task<ApplicationUser> GetUser(string authorizationHeader)
-        {
-            var userService = new UserService(_userManager, _configuration);
-            var username = AuthenticationHelper.GetUserFromToken(authorizationHeader, _configuration);
-
-            if (username == null) return null;
-
-            return await userService.Get(username);
         }
     }
 }

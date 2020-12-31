@@ -14,7 +14,7 @@ namespace PromocodesApp.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<CodeServiceUser>()
-               .HasKey(x => new { x.CodeId, x.ServiceId, x.UserId });
+               .HasKey(x => new { x.CodeId, x.ServiceId, x.UserName });
 
             base.OnModelCreating(modelBuilder);
         }

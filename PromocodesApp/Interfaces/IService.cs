@@ -8,6 +8,7 @@ namespace PromocodesApp.Interfaces
 {
     public interface IService<T>
     {
+        string CurrentUserName();
         Task<IList<T>> Get();
         Task<T> Get(int id);
         Task<T> Put(int id, T itm);

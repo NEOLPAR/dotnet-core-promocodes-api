@@ -22,9 +22,9 @@ namespace PromocodesApp.Controllers
 
         // GET: api/CodeServiceUsers
         [HttpGet]
-        public async Task<IActionResult> Get([FromHeader] string authorization)
+        public async Task<IActionResult> Get()
         {
-            var response = await _service.Get(authorization);
+            var response = await _service.Get();
 
             if (response == null) return BadRequest();
 
@@ -34,9 +34,9 @@ namespace PromocodesApp.Controllers
         // GET: api/CodeServiceUsers/5/8/9245fe4a-d402-451c-b9ed-9c1a04247482
         [HttpGet("{codeId}/{serviceId}")]
         public async Task<IActionResult> Get
-            (int codeId, int serviceId, [FromHeader] string authorization)
+            (int codeId, int serviceId)
         {
-            var response = await _service.Get(codeId, serviceId, authorization);
+            var response = await _service.Get(codeId, serviceId);
 
             if (response == null)
             {
@@ -49,9 +49,9 @@ namespace PromocodesApp.Controllers
         // POST: api/CodeServiceUsers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<IActionResult> Post(CodeServiceUserDTO itm, [FromHeader] string authorization)
+        public async Task<IActionResult> Post(CodeServiceUserDTO itm)
         {
-            var response = await _service.Post(fromDTO(itm), authorization);
+            var response = await _service.Post(fromDTO(itm));
 
             if (response == null) return BadRequest();
 
@@ -61,9 +61,9 @@ namespace PromocodesApp.Controllers
         // DELETE: api/CodeServiceUsers/5/8/9245fe4a-d402-451c-b9ed-9c1a04247482
         [HttpDelete("{codeId}/{serviceId}")]
         public async Task<IActionResult> Delete
-            (int codeId, int serviceId, [FromHeader] string authorization)
+            (int codeId, int serviceId)
         {
-            var response = await _service.Delete(codeId, serviceId, authorization);
+            var response = await _service.Delete(codeId, serviceId);
 
             if (!response)
             {

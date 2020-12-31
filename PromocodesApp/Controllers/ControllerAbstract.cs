@@ -11,6 +11,7 @@ namespace PromocodesApp.Controllers
     public abstract class ControllerAbstract<T, U> : ControllerBase
     {
         protected IService<T> _service;
+        public readonly string _username;
 
         public ControllerAbstract(IService<T> service)
         {

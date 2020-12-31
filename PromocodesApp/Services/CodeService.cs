@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using PromocodesApp.Interfaces;
 using PromocodesApp.Models;
 using System.Collections.Generic;
@@ -10,8 +11,15 @@ namespace PromocodesApp.Services
     public class CodeService : IService<Code>
     {
         private readonly PromocodesAppContext _context;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public CodeService(PromocodesAppContext context) =>_context = context;
+        public CodeService(PromocodesAppContext context,
+            IHttpContextAccessor httpContextAccessor)
+        {
+            _context = context;
+            _httpContextAccessor = httpContextAccessor;
+        }
+        public string CurrentUserName() => _httpContextAccessor.HttpContext.User.Identity.Name;
 
         public async Task<IList<Code>> Get()
         {

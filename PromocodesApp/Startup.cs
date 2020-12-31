@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -91,6 +92,7 @@ namespace PromocodesApp
                 });
             });
 
+            services.AddHttpContextAccessor();
             // configure DI for application services
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IService<Code>, CodeService>();
@@ -99,7 +101,12 @@ namespace PromocodesApp
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public async void Configure(IApplicationBuilder app, IWebHostEnvironment env, PromocodesAppContext context, UserManager<ApplicationUser> userManager)
+        public async void Configure(
+            IApplicationBuilder app, 
+            IWebHostEnvironment env, 
+            PromocodesAppContext context, 
+            UserManager<ApplicationUser> userManager,
+            IHttpContextAccessor httpContextAccessor)
         {
             if (env.IsDevelopment())
             {
@@ -113,7 +120,8 @@ namespace PromocodesApp
 
                 context.Codes.Add(new Code { Name = "Code 1" });
                 context.Services.Add(new Service { Name = "Service 1", Description = "Desc" });
-                var userService = new UserService(userManager, Configuration);
+                var userService = new UserService
+                    (userManager, Configuration, httpContextAccessor);
                 await userService.Register(new RegisterRequest { 
                     Email = "test@test.com", Username = "test", Password = "Test1234*" });
 

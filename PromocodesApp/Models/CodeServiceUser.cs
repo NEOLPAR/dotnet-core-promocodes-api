@@ -20,7 +20,7 @@ namespace PromocodesApp.Models
         public Service Service { get; set; }
 
         [ForeignKey(nameof(ApplicationUser))]
-        public string UserId { get; set; }
+        public string UserName { get; set; }
         public ApplicationUser User { get; set; }
         
         public bool Enabled { get; set; }
@@ -31,7 +31,7 @@ namespace PromocodesApp.Models
         {
             CodeId = itm.CodeId;
             ServiceId = itm.ServiceId;
-            UserId = itm.UserId;
+            UserName = itm.UserName;
             Enabled = itm.Enabled;
         }
     }

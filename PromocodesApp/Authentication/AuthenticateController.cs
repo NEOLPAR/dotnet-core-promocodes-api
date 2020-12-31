@@ -19,9 +19,9 @@ namespace PromocodesApp.Authentication
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetId([FromHeader] string authorization)
+        public async Task<IActionResult> GetId()
         {
-            var response = await _userService.GetId(authorization);
+            var response = await _userService.GetId();
 
             if (response == null)
                 return BadRequest();
