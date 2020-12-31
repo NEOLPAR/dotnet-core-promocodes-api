@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using PromocodesApp.Helpers;
@@ -17,18 +18,24 @@ namespace PromocodesApp.Authentication
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IConfiguration _configuration;
 
-        public UserService(UserManager<ApplicationUser> userManager, IConfiguration configuration)
+        public UserService(UserManager<ApplicationUser> userManager,
+            IConfiguration configuration)
         {
             _userManager = userManager;
             _configuration = configuration;
         }
         public async Task<string> GetId(string authorization)
         {
-            var token = AuthenticationHelper.GetToken(authorization);
-            var userName = AuthenticationHelper.GetUser(token, _configuration);
+            var userName = AuthenticationHelper.GetUserFromToken(authorization, _configuration);
             var user = await _userManager.FindByNameAsync(userName);
 
             return user.Id;
+        }
+        public async Task<ApplicationUser> Get(string username)
+        {
+            var user = await _userManager.FindByNameAsync(username);
+
+            return user;
         }
         public async Task<LoginDTO> Login(LoginRequest model)
         {

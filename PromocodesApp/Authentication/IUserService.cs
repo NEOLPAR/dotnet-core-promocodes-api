@@ -10,6 +10,7 @@ namespace PromocodesApp.Authentication
     {
         Task<LoginDTO> Login(LoginRequest model);
         Task<string> Register(RegisterRequest model);
-        Task<string> GetId([FromHeader] string authorization);
+        Task<string> GetId(string authorization);
+        Task<ApplicationUser> Get(string username);
     }
 }
