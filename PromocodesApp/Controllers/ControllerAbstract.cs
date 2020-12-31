@@ -28,7 +28,7 @@ namespace PromocodesApp.Controllers
         }
 
         // GET: api/T/5
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> Get(int id)
         {
             var response = await _service.Get(id);
