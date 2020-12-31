@@ -17,31 +17,26 @@ using System.Threading.Tasks;
 
 namespace PromocodesApp.Services
 {
-    public class ServiceService : IServiceService<ServiceDTO>
+    public class ServiceService : IServiceService<Service>
     {
         private readonly PromocodesAppContext _context;
 
         public ServiceService(PromocodesAppContext context) => _context = context;
 
-        public async Task<IList<ServiceDTO>> Get()
+        public async Task<IList<Service>> Get()
         {
             return await _context.Services
-                .Select(x => new ServiceDTO(x.Id, x.Name, x.Description))
                 .ToListAsync();
         }
 
-        public async Task<ServiceDTO> Get(int id)
+        public async Task<Service> Get(int id)
         {
-            var itm = await _context.Services.FindAsync(id);
-
-            if (itm == null) return null;
-
-            return new ServiceDTO(itm.Id, itm.Name, itm.Description);
+            return await _context.Services.FindAsync(id);
         }
 
-        public async Task<ServiceDTO> Put(int id, ServiceDTO itm)
+        public async Task<Service> Put(int id, Service itm)
         {
-            if (id != itm.Id) return null;
+            if (id != itm.ServiceId) return null;
 
             var newItm = await _context.Services.FindAsync(id);
             
@@ -59,23 +54,17 @@ namespace PromocodesApp.Services
                 return null;
             }
 
-            return new ServiceDTO(newItm);
+            return newItm;
         }
 
-        public bool Exists(int id) => _context.Services.Any(e => e.Id == id);
+        public bool Exists(int id) => _context.Services.Any(e => e.ServiceId == id);
 
-        public async Task<ServiceDTO> Post(ServiceDTO itm)
+        public async Task<Service> Post(Service newItm)
         {
-            var newItm = new Service
-            {
-                Name = itm.Name,
-                Description = itm.Description
-            };
-
             _context.Services.Add(newItm);
             await _context.SaveChangesAsync();
 
-            return new ServiceDTO(newItm);
+            return newItm;
         }
 
         public async Task<bool> Delete(int id)
@@ -90,20 +79,19 @@ namespace PromocodesApp.Services
             return true;
         }
 
-        public async Task<ServiceDTO> GetByName(string name)
+        public async Task<Service> GetByName(string name)
         {
             var itm = await _context.Services.Where(x => x.Name == name).FirstOrDefaultAsync();
 
             if (itm == null) return null;
 
-            return new ServiceDTO(itm);
+            return itm;
         }
 
-        public async Task<IList<ServiceDTO>> GetInfiniteScroll(int page, int elements)
+        public async Task<IList<Service>> GetInfiniteScroll(int page, int elements)
         {
             var startPosition = (page - 1) * elements;
             return await _context.Services
-                .Select(x => new ServiceDTO(x.Id, x.Name, x.Description))
                 .Skip(startPosition).Take(elements)
                 .ToListAsync();
         }

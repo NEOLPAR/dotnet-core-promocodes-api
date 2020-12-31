@@ -1,15 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PromocodesApp.Entities;
 using PromocodesApp.Interfaces;
+using PromocodesApp.Models;
 using PromocodesApp.Services;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace PromocodesApp.Controllers
 {
-    public class ServicesController : ControllerAbstract<ServiceDTO>
+    public class ServicesController : ControllerAbstract<Service, ServiceDTO>
     {
-        public new IServiceService<ServiceDTO> _service;
-        public ServicesController(IServiceService<ServiceDTO> service) :
+        public new IServiceService<Service> _service;
+        public ServicesController(IServiceService<Service> service) :
             base(service)
         {
             _service = service;
@@ -26,7 +29,7 @@ namespace PromocodesApp.Controllers
                 return NoContent();
             }
 
-            return Ok(response);
+            return Ok(ToDTO(response));
         }
 
         // GET: api/services/:page/:elements
@@ -40,7 +43,22 @@ namespace PromocodesApp.Controllers
                 return NoContent();
             }
 
-            return Ok(response);
+            return Ok(ToDTO(response));
+        }
+
+
+        public override Service FromDTO(ServiceDTO itm)
+        {
+            return new Service(itm);
+        }
+        public override ServiceDTO ToDTO(Service itm)
+        {
+            return new ServiceDTO(itm);
+        }
+
+        public override IList<ServiceDTO> ToDTO(IList<Service> itmList)
+        {
+            return itmList.Select(x => new ServiceDTO(x)).ToList();
         }
     }
 }

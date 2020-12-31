@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using PromocodesApp.Entities;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace PromocodesApp.Models
@@ -11,5 +12,13 @@ namespace PromocodesApp.Models
         public string Description { get; set; }
         
         public ICollection<CodeServiceUser> CodesServicesUsers { get; set; }
+
+        public Service() { }
+        public Service(ServiceDTO itm)
+        {
+            ServiceId = itm.Id;
+            Name = itm.Name;
+            Description = itm.Description;
+        }
     }
 }

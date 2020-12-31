@@ -1,4 +1,5 @@
 ﻿using PromocodesApp.Authentication;
+using PromocodesApp.Entities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -23,6 +24,15 @@ namespace PromocodesApp.Models
         public ApplicationUser User { get; set; }
         
         public bool Enabled { get; set; }
-        
+
+        public CodeServiceUser()
+        { }
+        public CodeServiceUser(CodeServiceUserDTO itm)
+        {
+            CodeId = itm.CodeId;
+            ServiceId = itm.ServiceId;
+            UserId = itm.UserId;
+            Enabled = itm.Enabled;
+        }
     }
 }

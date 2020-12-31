@@ -20,7 +20,7 @@ namespace PromocodesApp.Entities
         }
         public CodeDTO(Code itm)
         {
-            Id = itm.Id;
+            Id = itm.CodeId;
             Name = itm.Name;
         }
     }

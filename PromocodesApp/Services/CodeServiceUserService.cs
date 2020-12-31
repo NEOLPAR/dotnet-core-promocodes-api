@@ -28,49 +28,48 @@ namespace PromocodesApp.Services
             _configuration = configuration;        
         }
 
-        public async Task<IList<CodeServiceUserDTO>> Get(string authorizationHeader)
+        public async Task<IList<CodeServiceUser>> Get(string authorizationHeader)
         {
             var userItm = await GetUser(authorizationHeader);
 
             if (userItm == null) return null;
 
-            return await _context.CodesServicesUsers
-                .Select(x => new CodeServiceUserDTO
-                    (x.CodeId, x.ServiceId, userItm.Id, x.Enabled))
+            var services = await _context.CodesServicesUsers
+                .Include(r => r.Service)
+                .Include(r => r.Code)
+                .Where(x => x.User.Id == userItm.Id)
                 .ToListAsync();
+
+            return services;
         }
 
-        public async Task<CodeServiceUserDTO> Get
+        public async Task<CodeServiceUser> Get
             (int codeId, int serviceId, string authorizationHeader)
         {
             var userItm = await GetUser(authorizationHeader);
 
             if (userItm == null) return null;
 
-            var itm = await _context.CodesServicesUsers
+            return await _context.CodesServicesUsers
                 .FindAsync(codeId, serviceId, userItm.Id);
-
-            if (itm == null) return null;
-
-            return new CodeServiceUserDTO
-                (itm.CodeId, itm.ServiceId, itm.UserId, itm.Enabled);
         }
-        public async Task<CodeServiceUserDTO> Post(CodeServiceUserDTO itm, string authorizationHeader)
+        public async Task<CodeServiceUser> Post(CodeServiceUser itm, string authorizationHeader)
         {
-
             var codeItm = await _context.Codes.FindAsync(itm.CodeId);
             var serviceItm = await _context.Services.FindAsync(itm.ServiceId);
             var userItm = await GetUser(authorizationHeader);
 
-            if (codeItm == null || codeItm.Id != itm.CodeId ||
-                serviceItm == null || serviceItm.Id != itm.ServiceId ||
+            if (codeItm == null || codeItm.CodeId != itm.CodeId ||
+                serviceItm == null || serviceItm.ServiceId != itm.ServiceId ||
                 userItm == null) 
                 return null;
 
             var newItm = new CodeServiceUser
             {
                 CodeId = itm.CodeId,
+                Code = codeItm,
                 ServiceId = itm.ServiceId,
+                Service = serviceItm,
                 UserId = userItm.Id,
                 Enabled = itm.Enabled
             };
@@ -78,7 +77,7 @@ namespace PromocodesApp.Services
             _context.CodesServicesUsers.Add(newItm);
             await _context.SaveChangesAsync();
 
-            return new CodeServiceUserDTO(newItm);
+            return newItm;
         }
 
         public async Task<bool> Delete(int codeId, int serviceId, string authorizationHeader)

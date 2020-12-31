@@ -93,8 +93,8 @@ namespace PromocodesApp
 
             // configure DI for application services
             services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IService<CodeDTO>, CodeService>();
-            services.AddScoped<IServiceService<ServiceDTO>, ServiceService>();
+            services.AddScoped<IService<Code>, CodeService>();
+            services.AddScoped<IServiceService<Service>, ServiceService>();
             services.AddScoped<ICodeServiceUserService, CodeServiceUserService>();
         }
 

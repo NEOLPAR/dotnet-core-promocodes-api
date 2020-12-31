@@ -22,7 +22,7 @@ namespace PromocodesApp.Entities
         }
         public ServiceDTO(Service itm)
         {
-            Id = itm.Id;
+            Id = itm.ServiceId;
             Name = itm.Name;
             Description = itm.Description;
         }

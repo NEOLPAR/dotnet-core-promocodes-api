@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PromocodesApp.Entities;
 using PromocodesApp.Interfaces;
+using PromocodesApp.Models;
 using PromocodesApp.Services;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace PromocodesApp.Controllers
@@ -25,7 +28,7 @@ namespace PromocodesApp.Controllers
 
             if (response == null) return BadRequest();
 
-            return Ok(response);
+            return Ok(ToDTO(response));
         }
 
         // GET: api/CodeServiceUsers/5/8/9245fe4a-d402-451c-b9ed-9c1a04247482
@@ -40,7 +43,7 @@ namespace PromocodesApp.Controllers
                 return NotFound();
             }
 
-            return Ok(response);
+            return Ok(ToDTO(response));
         }
 
         // POST: api/CodeServiceUsers
@@ -48,11 +51,11 @@ namespace PromocodesApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Post(CodeServiceUserDTO itm, [FromHeader] string authorization)
         {
-            var response = await _service.Post(itm, authorization);
+            var response = await _service.Post(fromDTO(itm), authorization);
 
             if (response == null) return BadRequest();
 
-            return Ok(response);
+            return Ok(ToDTO(response));
         }
 
         // DELETE: api/CodeServiceUsers/5/8/9245fe4a-d402-451c-b9ed-9c1a04247482
@@ -68,6 +71,24 @@ namespace PromocodesApp.Controllers
             }
 
             return NoContent();
+        }
+
+        [NonAction]
+        public CodeServiceUser fromDTO(CodeServiceUserDTO itm)
+        {
+            return new CodeServiceUser(itm);
+        }
+
+        [NonAction]
+        public CodeServiceUserDTO ToDTO(CodeServiceUser itm)
+        {
+            return new CodeServiceUserDTO(itm);
+        }
+
+        [NonAction]
+        public IList<CodeServiceUserDTO> ToDTO(IList<CodeServiceUser> itmList)
+        {
+            return itmList.Select(x => new CodeServiceUserDTO(x)).ToList();
         }
     }
 }
