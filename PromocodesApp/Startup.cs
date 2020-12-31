@@ -95,6 +95,7 @@ namespace PromocodesApp
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IService<CodeDTO>, CodeService>();
             services.AddScoped<IService<ServiceDTO>, ServiceService>();
+            services.AddScoped<ICodeServiceUserService, CodeServiceUserService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
