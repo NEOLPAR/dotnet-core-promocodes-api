@@ -26,8 +26,11 @@ namespace PromocodesApp.Authentication
         }
         public async Task<string> GetId(string authorization)
         {
-            var userName = AuthenticationHelper.GetUserFromToken(authorization, _configuration);
-            var user = await _userManager.FindByNameAsync(userName);
+            var username = AuthenticationHelper.GetUserFromToken(authorization, _configuration);
+
+            if (username == null) return null;
+
+            var user = await _userManager.FindByNameAsync(username);
 
             return user.Id;
         }

@@ -25,7 +25,8 @@ namespace PromocodesApp.Services
         {
             _context = context;
             _userManager = userManager;
-            _configuration = configuration;        }
+            _configuration = configuration;        
+        }
 
         public async Task<IList<CodeServiceUserDTO>> Get(string authorizationHeader)
         {
@@ -100,6 +101,8 @@ namespace PromocodesApp.Services
         {
             var userService = new UserService(_userManager, _configuration);
             var username = AuthenticationHelper.GetUserFromToken(authorizationHeader, _configuration);
+
+            if (username == null) return null;
 
             return await userService.Get(username);
         }
