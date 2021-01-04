@@ -61,7 +61,7 @@ namespace PromocodesApp.Controllers
 
             if (response == null) return BadRequest();
 
-            return NoContent();
+            return Ok(ToDTO(response));
         }
 
         // POST: api/T

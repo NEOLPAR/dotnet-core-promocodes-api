@@ -22,7 +22,7 @@ namespace PromocodesApp.Controllers
 
         // GET: api/services/:name
         [HttpGet("{name}")]
-        public async Task<IActionResult> Get(string name)
+        public async Task<IActionResult> GetByName(string name)
         {
             var response = await _service.GetByName(name);
 
@@ -36,7 +36,7 @@ namespace PromocodesApp.Controllers
 
         // GET: api/services/:page/:elements
         [HttpGet("{page:int}/{elements:int}")]
-        public async Task<IActionResult> Get(int page, int elements)
+        public async Task<IActionResult> GetInfiniteScroll(int page, int elements)
         {
             var response = await _service.GetInfiniteScroll(page, elements);
 
@@ -50,9 +50,14 @@ namespace PromocodesApp.Controllers
 
         // GET: api/services/:name/:page/:elements
         [HttpGet("filter/{name}/{page:int}/{elements:int}")]
-        public async Task<IActionResult> Get(string name, int page, int elements)
+        public async Task<IActionResult> FilterByNameInfiniteScroll(string name, int page, int elements)
         {
             var response = await _service.FilterByNameInfiniteScroll(name, page, elements);
+
+            if (response == null)
+            {
+                return NoContent();
+            }
 
             return Ok(ToDTO(response));
         }
@@ -63,6 +68,11 @@ namespace PromocodesApp.Controllers
         {
             var response = await _service.FilterByName(name);
 
+            if (response == null)
+            {
+                return NoContent();
+            }
+
             return Ok(ToDTO(response));
         }
 
@@ -72,12 +82,12 @@ namespace PromocodesApp.Controllers
         }
         public override ServiceDTO ToDTO(Service itm)
         {
-            return new ServiceDTO(itm, User.Identity.Name);
+            return new ServiceDTO(itm, _service.CurrentUserName());
         }
 
         public override IList<ServiceDTO> ToDTO(IList<Service> itmList)
         {
-            return itmList.Select(x => new ServiceDTO(x, User.Identity.Name)).ToList();
+            return itmList.Select(x => new ServiceDTO(x, _service.CurrentUserName())).ToList();
         }
     }
 }

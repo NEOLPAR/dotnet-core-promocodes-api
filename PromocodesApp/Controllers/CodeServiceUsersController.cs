@@ -51,7 +51,7 @@ namespace PromocodesApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Post(CodeServiceUserDTO itm)
         {
-            var response = await _service.Post(fromDTO(itm));
+            var response = await _service.Post(FromDTO(itm));
 
             if (response == null) return BadRequest();
 
@@ -74,7 +74,7 @@ namespace PromocodesApp.Controllers
         }
 
         [NonAction]
-        public CodeServiceUser fromDTO(CodeServiceUserDTO itm)
+        public CodeServiceUser FromDTO(CodeServiceUserDTO itm)
         {
             return new CodeServiceUser(itm);
         }
