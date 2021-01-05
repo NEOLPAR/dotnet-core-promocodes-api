@@ -3,38 +3,53 @@
 
 [This image was taken as inspiration.](https://github.com/NEOLPAR/dotnet-core-promocodes-api/blob/master/reference_layout.PNG)
 
-[x] Use EF Core.
-[x] Use in memory database. 
+[x]	Use EF Core.
+
+[x]	Use in memory database. 
+
 [x] Use of Identity for User database.
+
 [x] Authentization with JwtBearer.
+
 [x] Swagger for documentation and manual testing.
+
 [x] Setup of Cors.
+
 [x] Ability to search services by name.
+
 [x] Search by name with contains.
+
 [x] Ability to Activate bonus for a Service for the current user.
+
 [x] List services with the actived bonus.
+
 [x] Infinite scroll for the Services list.
+
 [x] Infinite scroll with name filtered.
+
 [x] All services getters are filtered returning the services and the code related if the user is the current.
+
 [x] All code service user getters are filtering by current user.
+
 [x] Code splat in services using DI.
 
 ## Getting Started
 
-**You’ll need to have .NET Core 5.0.1 or later version on your local development machine.**. [You can download it here.](https://dotnet.microsoft.com/download/dotnet/5.0)
+**You’ll need to have .NET Core 5.0.1 or later version on your local development machine.** 
+[You can download it here.](https://dotnet.microsoft.com/download/dotnet/5.0)
 
-This project was developed with Visual Studio 2019 Community which can be downloaded for free [here](https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=Community&rel=16). If you want to use VS for this application, you just need to to the [Installation](#Installing) and run the application. VS will download all the dependencies and build the project automatically.
+This project was developed with Visual Studio 2019 Community which can be downloaded for free [here](https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=Community&rel=16). If you want to use VS for this application, you just need to follow the [Installation](#Installing) and run the application. VS will download all the dependencies and build the project automatically.
 
 The following steps are instructions to instal, build, run and test the application from PowerShell.
 
 ## Installing
 
-First, we need to clone the project from Github, we'll install it in a folder called `promocodes` or a different one at your choice. If you don't give it a different name it will be downloaded in the folder `dotnet-core-promocodes-api`.
+First, we need to clone the project from Github, we will install it in a folder called `promocodes` or a different one at your choice. If you don't give it a different name it will be downloaded in the folder `dotnet-core-promocodes-api`.
 ```sh
 git clone https://github.com/NEOLPAR/dotnet-core-promocodes-api.git promocodes
 ```
 
-Once it's installed we need to go to the project folder for the next steps.
+Once it is installed we need to go to the project folder for the next steps.
 ```sh
 cd promocodes
 ```
@@ -54,12 +69,15 @@ dotnet run --project .\PromocodesApp\PromocodesApp.csproj
 ```
 
 This will start the application in the urls:
+
 https://localhost:5001
+
 http://localhost:5000
+
 
 **If you are using these ports you will need to change them in the configuration file `PromocodesApp/Services/launchSettings.json`.**
 
-Now we are ready to use Swagger/OpenApi if we're in dev environment, or other application like Postman.
+Now we are ready to use Swagger/OpenApi if we are in dev environment, or other application like Postman.
 
 ## Documentation and Manual testing with Swagger/OpenApi
 
